@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
@@ -7,6 +8,13 @@ using System.Text;
 
 namespace Business.Concrete
 {
+    //CROSS CUTTING CONCERNS
+    //-LOG
+    //-CACHE
+    //-TRANSACTION
+    //-AUTHORIZATION
+    //VALIDATION
+
     public class CategoryManager : ICategoryService
     {
         ICategoryDal _categoryDal;
@@ -16,15 +24,15 @@ namespace Business.Concrete
             _categoryDal = categoryDal;
         }
 
-        public List<Category> GetAll()
+        public IDataResult<List<Category>> GetAll()
         {
             //iş kodları
-            return _categoryDal.GetAll();
+            return new SuccesDataResult<List<Category>>(_categoryDal.GetAll());
         }
         //select * from categories where CategoryId=3
-        public Category GetById(int categoryId)
+        public IDataResult<Category> GetById(int categoryId)
         {
-            return _categoryDal.Get(c => c.CategoryId == categoryId);
+            return new SuccesDataResult<Category>(_categoryDal.Get(c => c.CategoryId == categoryId));
         }
     }
 }

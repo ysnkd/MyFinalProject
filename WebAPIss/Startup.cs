@@ -32,9 +32,10 @@ namespace WebAPIss
             //Mimarinin Adý: Ninject,CastleWindsor,StructureMap,LighInject,DryInject-->IoC Container
             //AOP
             //Autofac
+            //Postsharp
             services.AddControllers();
-            services.AddSingleton<IProductService,ProductManager>(); //Eðer ki referans istenilirse AddSingleton bizim yerimize gerçekleþtiriyor.
-            services.AddSingleton<IProductDal,EfProductDal>();
+            //services.AddSingleton<IProductService,ProductManager>(); //Eðer ki referans istenilirse AddSingleton bizim yerimize gerçekleþtiriyor.
+            //services.AddSingleton<IProductDal,EfProductDal>();
             //bizim yerimize newliyor.
         }
 

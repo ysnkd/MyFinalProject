@@ -11,14 +11,14 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
-            ProductTest();
+            //ProductTest();
             //IoC
             //CategoryTest();
 
             //DTOs: Data Transformation Object
         }
 
-        private static void CategoryTest()
+       /* private static void CategoryTest()
         {
             CategoryManager categoryManager = new CategoryManager(new EfCategoryDal());
 
@@ -26,9 +26,9 @@ namespace ConsoleUI
             {
                 Console.WriteLine(category.CategoryName);
             }
-        }
+        }*/
 
-        private static void ProductTest()
+        /*private static void ProductTest()
         {
             ProductManager productManager = new ProductManager(new EfProductDal());
 
@@ -44,6 +44,6 @@ namespace ConsoleUI
            
 
             
-        }
+        }*/
     }
 }
