@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Core.Utilities.Business
 {
+    //BusinessRules: Business özel operasyonlar için bir array oluşturuyor. Bu operasyonlar eğer ki bir tanesi başarısızsa bildirmesini istiyorum.
     public class BusinessRules
     {
         public static IResult Run(params IResult[] logics)

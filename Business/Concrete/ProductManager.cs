@@ -1,7 +1,11 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspect.Autofac;
 using Business.CCS;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Performance;
+using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Business;
@@ -15,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Transactions;
 
 namespace Business.Concrete
 {
@@ -36,6 +41,19 @@ namespace Business.Concrete
         //Cross Cutting Concerns:Her katmanda dikini kesen yapılardır.
         //Validation,Log,Cache,Transaction,Auth=>CCS.
         //ATRIBUTE'LARA TYPEOF ILE TANIMLARIZ.
+        [SecuredOperation("admin")]//Yetkilendirme
+        //Claim:İdda etmek.Yukarıdaki operasyon. Ya admin ya da editor seçeneği
+        //olması lazım.
+        //Json Web Token.
+        //Encryption,Hashing:Bir datayı karşı taraf okumasın diye
+        //yapılan çalışmalardır.
+        //MD5,SHA1: Şifreyi kriptolama algoritmalarırıdır.
+        //şifre : 12345 md5: BDX3-qwlekqwekqweöaöndçapoqğüğ'^!'^ şeklinde
+        //veritabanına yazar.
+        //Rainbow Table.
+        
+        
+        [CacheRemoveAspect("IProductService.Get")]
         public IResult Add(Product product)
         {
             //DRY, CLEAN CODE PRENSİBİ
@@ -81,12 +99,16 @@ namespace Business.Concrete
             //INTERCEPTOR: ARAYA GİRMEK DEMEK. HATABAŞI VEYA SONU VS
         }//BURDA LOGLAMA KULLANABİLİRİZ.
 
+        //Cashe: dataları database'ye gitmeden,
+        //çalıştırmak,getirmek vs.
+        
+        //[SecuredOperation("products.getall")]
+        //[CacheAspect]
+        
+        
         public IDataResult<List<Product>> GetAll()
         {
-            if (DateTime.Now.Hour==1)
-            {
-               return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
-            }
+           
             //İş Kodları
             //yetkisi var mı ?
             return new DataResult<List<Product>>(_productDal.GetAll(),true,Messages.ProductsListed);
@@ -99,7 +121,11 @@ namespace Business.Concrete
             //Expression kodu : bana lambda ver demektir.
             return new SuccesDataResult<List<Product>>(_productDal.GetAll(p => p.CategoryId == id));
         }
-
+        [CacheAspect]
+        [PerformanceAspect(5)]
+        //perfomans'ta eğer datanın gelmesi bana 5 sn'den fazla
+        //sürerse bana uyarı ver.
+        //interceptorlara entegre edilirse herşeyde bizi uyarı verir.
         public IDataResult<Product> GetById(int productId)
         {
             return new SuccesDataResult<Product>(_productDal.Get(p => p.ProductId == productId));
@@ -116,6 +142,10 @@ namespace Business.Concrete
             return new SuccesDataResult<List<ProductDetailDto>>(_productDal.GetProductDetails());
         }
         [ValidationAspect(typeof(ProductValidator))]
+        [CacheRemoveAspect("IProductService.Get")]
+        //cache ortadan kaldırma. çalışma anında
+        //herşey interface ile servis ile.
+
         public IResult Update(Product product)
         {
             throw new NotImplementedException();
@@ -151,5 +181,20 @@ namespace Business.Concrete
 
 
         }
+        [TransactionScopeAspect]
+        public IResult AddTransactionalTest(Product product)
+        {
+            Add(product);
+            if (product.UnitPrice<10)
+            {
+                throw new Exception("");
+            }
+            Add(product);
+            return null;
+        }
+
+        
+
+       
     }
 }

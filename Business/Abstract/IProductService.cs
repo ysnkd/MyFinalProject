@@ -19,6 +19,19 @@ namespace Business.Abstract
         IDataResult<Product> GetById(int productId);
         IResult Add(Product product); //ekleme operasyonu // void yerine IRESULT servisi eklendi
         IResult Update(Product product);
+
+        IResult AddTransactionalTest(Product product);
+        
+        //Transaction
+
+
+
+        //uygulamalarda tutarlılığı korumaktır.
+        //örn hesapta 100 tl para var kerem'e 10 tl aktarıcam,
+        //benim hesabımın 10 tl düşülmesi, keremin hesabı 10 tl artması,
+        //olayı.
+        //gerçekleşmezse işlem geri alması gerekiyor.
+
     }
 }
 

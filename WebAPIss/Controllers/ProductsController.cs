@@ -13,6 +13,7 @@ namespace WebAPIss.Controllers
 {
     [Route("api/[controller]")]
     [ApiController] //ATTRIBUTE
+    
     public class ProductsController : ControllerBase
     {
         //Lose coupled
@@ -25,7 +26,7 @@ namespace WebAPIss.Controllers
         {
             _productService = productService;
         }
-
+        
         [HttpGet("getall")]
         
 
@@ -42,6 +43,7 @@ namespace WebAPIss.Controllers
         }
 
         [HttpPost("add")]
+        
         public IActionResult Add(Product product)
         {
             var result = _productService.Add(product);
@@ -52,20 +54,19 @@ namespace WebAPIss.Controllers
             }
             return BadRequest(result);
         }
-        [HttpGet("getbyid")]
+        [HttpGet("getbycategory")]
+        //bu teknikte controller'dan başlıyoruz.
         //Aliance verebiliriz.
-        public IActionResult GetById(int id)
+        public IActionResult GetByCategory(int categoryId)
         {
-            var result = _productService.GetById(id);
+            var result = _productService.GetAllByCategoryId(categoryId);
             if (result.Success)
             {
                 return Ok(result);
 
             }
             return BadRequest(result);
-            
-
-            
         }
+       
     }
 }

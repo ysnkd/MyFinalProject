@@ -19,6 +19,8 @@ namespace Core.Utilities.Interceptors
             classAttributes.AddRange(methodAttributes);
             return classAttributes.OrderBy(x => x.Priority).ToArray();
         }
+        //çalıştırılmak istenen metotların üstüne bakıyodu
+        //yani aspectlerine, çalıştırıyordu.
     }
 }
 
